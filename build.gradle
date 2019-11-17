@@ -1,0 +1,64 @@
+buildscript {
+    ext {
+        springBootVersion = '2.2.0.RELEASE'
+        springVersion = '5.2.0.RELEASE'
+        junitPlatformVersion = '1.5.2'
+        junitJupiterVersion = '5.5.2'
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+    }
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'idea'
+
+group 'com.mansubh'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile("org.springframework.boot:spring-boot-starter:$springBootVersion")
+    compile("org.springframework.boot:spring-boot-starter-webflux:$springBootVersion")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBootVersion")
+
+
+    def junitPlatformModules = [
+            "junit-platform-commons",
+            "junit-platform-engine",
+            "junit-platform-runner",
+    ]
+
+    junitPlatformModules.each { name ->
+        testCompile("org.junit.platform:$name:$junitPlatformVersion")
+    }
+
+    def junitVintageModules = [
+            "junit-jupiter-api",
+            "junit-jupiter-engine",
+            "junit-jupiter-params",
+    ]
+
+    junitVintageModules.each { name ->
+        testCompile "org.junit.jupiter:$name:$junitJupiterVersion"
+    }
+    testCompile "org.junit.vintage:junit-vintage-engine:$junitJupiterVersion"
+    testCompile("org.junit.platform:junit-platform-runner:$junitPlatformVersion") {
+        exclude module: "junit"
+    }
+    testCompile "org.mockito:mockito-core:2.23.4"
+}
